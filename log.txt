@@ -1,0 +1,12 @@
+D:\UP>git log
+commit 71e7c771fcb325b0b23f6b8648fe46502084bc2c
+Author: alexislom <aleksei-lomako@mail.ru>
+Date:   Tue Feb 9 01:02:30 2016 +0300
+
+    Add status.txt
+
+commit 4e755660f74864206a0305be3c6061510c4f371c
+Author: alexislom <aleksei-lomako@mail.ru>
+Date:   Tue Feb 9 00:57:36 2016 +0300
+
+    Add .gitignore
