@@ -1,4 +1,16 @@
 D:\UP>git log
+commit 00c98c0423b2392ed1dce53b78326a33ceec35a0
+Author: alexislom <aleksei-lomako@mail.ru>
+Date:   Tue Feb 9 01:25:59 2016 +0300
+
+    Add new status.txt
+
+commit 44b089d375c88a7d287059356eae2e88cc3e1bb9
+Author: alexislom <aleksei-lomako@mail.ru>
+Date:   Tue Feb 9 01:04:43 2016 +0300
+
+    Add log.txt
+
 commit 71e7c771fcb325b0b23f6b8648fe46502084bc2c
 Author: alexislom <aleksei-lomako@mail.ru>
 Date:   Tue Feb 9 01:02:30 2016 +0300
