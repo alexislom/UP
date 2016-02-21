@@ -1,4 +1,4 @@
-package CleanCode;
+package by.bsu.cleancode;
 
 import javax.json.*;
 import java.io.*;
@@ -13,115 +13,102 @@ import java.util.regex.Pattern;
 public class MessageExchange {
 
     final static Logger logger = Logger.getLogger(MessageExchange.class.getName());
-
-    public ArrayList<Message> arrayList;
-    FileHandler fileHandler;
-
+    private List<Message> messageHistory;
 
     public MessageExchange() throws IOException {
-        arrayList = new ArrayList<>();
-        fileHandler = new FileHandler("logger.log");
+        messageHistory = new ArrayList<>();
+        FileHandler fileHandler = new FileHandler("logger.log");
         logger.addHandler(fileHandler);
         SimpleFormatter formatter = new SimpleFormatter();
         fileHandler.setFormatter(formatter);
     }
-    public void readFromFile(String filename){
+
+    public void readFromFile(String filename) {
         try {
             String content = new Scanner(new File(filename)).useDelimiter("\\Z").next();
             JsonReader reader = Json.createReader(new StringReader(content));
             JsonArray items = reader.readArray();
             reader.close();
             for (JsonValue item : items) {
-                arrayList.add(new Message().parseFromJson((JsonObject) item));
+                messageHistory.add(new Message().parseFromJson((JsonObject) item));
             }
-        }catch (IOException e){
-            logger.info("Wrong path!");
+            logger.info(Comments.READ_SUCCESSFUL + filename);
+        } catch (IOException e) {
+            logger.info(Comments.WRONG_PATH);
         }
-        logger.info("Read successful from file "+ filename );
     }
-    public void saveToJsonFile(String file) throws FileNotFoundException {
-        JsonWriter writer = Json.createWriter(new FileOutputStream(file));
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        if(arrayList.size() != 0) {
-            for (Message item : arrayList) {
-                builder = builder.add(item.getJson());
+
+    public void saveToJsonFile(String file) {
+        try {
+            JsonWriter writer = Json.createWriter(new FileOutputStream(file));
+            JsonArrayBuilder builder = Json.createArrayBuilder();
+            if (!messageHistory.isEmpty()) {
+                for (Message item : messageHistory) {
+                    builder = builder.add(item.getJson());
+                }
+                writer.writeArray(builder.build());
+                writer.close();
+                logger.info(Comments.SAVE_SUCCESSFUL + file);
+            } else {
+                logger.info(Comments.HISTORY_IS_EMPTY);
             }
-            writer.writeArray(builder.build());
-            writer.close();
-            System.out.println("File " + file + " created");
-        }else{
-            System.out.println("History is empty");
-            logger.info("Error, history is empty");
+        } catch (IOException e) {
+            logger.info(Comments.WRONG_PATH);
         }
-        logger.info("Save successful to file "+ file );
     }
-    public void addMessage(){
+
+    public void addMessage() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Author:");
-        String author = new String();
-        String message = new String();
-        if(scan.hasNextLine()) {
+        String author = "";
+        String message = "";
+        if (scan.hasNextLine()) {
             author = scan.nextLine();
         } else {
-            System.out.println("Empty input!");
-            logger.info("Empty input!");
+            logger.info(Comments.WRONG_INPUT);
         }
         System.out.println("Message:");
-        if(scan.hasNextLine()) {
+        if (scan.hasNextLine()) {
             message = scan.nextLine();
         } else {
-            System.out.println("Empty input!");
-            logger.info("Empty input!");
+            logger.info(Comments.WRONG_INPUT);
         }
-        UUID id = UUID.randomUUID();
-        long timestamp = new Date().getTime();
-        Message msg = new Message(id,author,timestamp,message);
-        arrayList.add(msg);
-        logger.info("Add message successful");
+        Message msg = new Message(author, message);
+        messageHistory.add(msg);
+        logger.info(Comments.ADD_MESSAGE);
     }
-    public void deleteMessage(){
+
+    public void deleteMessage() {
         System.out.println("Enter the message ID to be removed:");
         Scanner scan = new Scanner(System.in);
-        String id = new String();
-        if(scan.hasNextLine()) {
+        String id = "";
+        if (scan.hasNextLine()) {
             id = scan.nextLine();
         } else {
-            logger.info("Empty input!");
-            System.out.println("Empty input!");
+            logger.info(Comments.WRONG_INPUT);
         }
         UUID Id = UUID.fromString(id);
-        int i = 0;
-        boolean flag = false;
-        if(arrayList.size() != 0) {
-            for(i = 0;i<arrayList.size();i++){
-                if(arrayList.get(i).getId().equals(Id)){
-                    flag = true;
-                    break;
-                }
+        for (Message message : messageHistory) {
+            if (message.getId().equals(Id)) {
+                messageHistory.remove(message);
+                logger.info(Comments.REMOVE);
+                return;
             }
-            if(flag) {
-                arrayList.remove(i);
-            }else{
-                System.out.println("Message not found!");
-                logger.info("Message not found!");
-            }
-        }else{
-            logger.info("Error, history is empty");
-            System.out.println("History is empty");
         }
-        logger.info("Remove successful");
+        logger.info(Comments.MESSAGE_NOT_FOUND);
     }
-    public void viewAllHistory(){
-        if(arrayList.size() !=0 ){
-            Collections.sort(arrayList, new Comparator<Message>() {
+
+    public void viewAllHistory() {
+        if (!messageHistory.isEmpty()) {
+            Collections.sort(messageHistory, new Comparator<Message>() {
                 @Override
                 public int compare(Message message1, Message message2) {
-                    return (int) message1.getTimestamp()-(int)message2.getTimestamp();
+                    return message1.getTimestamp().compareTo(message2.getTimestamp());
                 }
             });
             StringBuilder stringbuilder = new StringBuilder();
             SimpleDateFormat formatting = new SimpleDateFormat("YYYY:MM:dd HH:mm:ss");
-            for(Message item :arrayList){
+            for (Message item : messageHistory) {
                 stringbuilder.append("Author: ");
                 stringbuilder.append(item.getAuthor());
                 stringbuilder.append("\nTimestamp: ");
@@ -132,113 +119,107 @@ public class MessageExchange {
                 stringbuilder.append(item.getMessage());
                 stringbuilder.append("\n");
                 System.out.println(stringbuilder);
-                stringbuilder.delete(0,stringbuilder.length());
+                stringbuilder.delete(0, stringbuilder.length());
             }
-        }else{
-            logger.info("Error, history is empty");
-            System.out.println("History is empty");
+            logger.info(Comments.VIEW_ALL_HISTORY);
+        } else {
+            logger.info(Comments.HISTORY_IS_EMPTY);
         }
-        logger.info("View all history");
     }
-    public void searchByAuthor(){
-        if(arrayList.size() !=0 ){
+
+    public void searchByAuthor() {
+        if (!messageHistory.isEmpty()) {
             System.out.println("Enter author:");
             Scanner scan = new Scanner(System.in);
-            String author = new String();
-            if(scan.hasNextLine()) {
+            String author = "";
+            if (scan.hasNextLine()) {
                 author = scan.nextLine();
             } else {
-                logger.info("Empty input!");
-                System.out.println("Empty input!");
+                logger.info(Comments.WRONG_INPUT);
             }
-            int i = 0;
             boolean flag = false;
             SimpleDateFormat formatting = new SimpleDateFormat("YYYY:MM:dd HH:mm:ss");
-            for(i = 0;i<arrayList.size();i++){
-                if(arrayList.get(i).getAuthor().equals(author)){
-                    flag = true;
+            for (Message item : messageHistory) {
+                if (item.getAuthor().equals(author)) {
                     StringBuilder stringbuilder = new StringBuilder();
+                    flag = true;
                     stringbuilder.append("Author: ");
-                    stringbuilder.append(arrayList.get(i).getAuthor());
+                    stringbuilder.append(item.getAuthor());
                     stringbuilder.append("\nTimestamp: ");
-                    stringbuilder.append(formatting.format(arrayList.get(i).getTimestamp()));
+                    stringbuilder.append(formatting.format(item.getTimestamp()));
                     stringbuilder.append("\nId: ");
-                    stringbuilder.append(arrayList.get(i).getId());
+                    stringbuilder.append(item.getId());
                     stringbuilder.append("\nMessage:\n");
-                    stringbuilder.append(arrayList.get(i).getMessage());
+                    stringbuilder.append(item.getMessage());
                     stringbuilder.append("\n");
                     System.out.println(stringbuilder);
-                    stringbuilder.delete(0,stringbuilder.length());
+                    stringbuilder.delete(0, stringbuilder.length());
+                    logger.info(Comments.SEARCH_BY_AUTHOR);
                 }
             }
-            if(!flag){
-                logger.info("Message not found!");
-                System.out.println("Messages not found!");
+            if (!flag) {
+                logger.info(Comments.MESSAGE_NOT_FOUND);
             }
-        }else{
-            logger.info("Error, history is empty");
-            System.out.println("History is empty");
+        } else {
+            logger.info(Comments.HISTORY_IS_EMPTY);
         }
-        logger.info("Search by author succsessful");
     }
-    public void searchByWord(){
-        if(arrayList.size() !=0 ){
+
+    public void searchByWord() {
+        if (!messageHistory.isEmpty()) {
             System.out.println("Enter lexeme:");
             Scanner scan = new Scanner(System.in);
-            String lexeme = new String();
-            if(scan.hasNextLine()) {
+            String lexeme = "";
+            if (scan.hasNextLine()) {
                 lexeme = scan.nextLine();
             } else {
-                logger.info("Empty input!");
-                System.out.println("Empty input!");
+                logger.info(Comments.WRONG_INPUT);
             }
-            int i = 0;
             boolean flag = false;
             SimpleDateFormat formatting = new SimpleDateFormat("YYYY:MM:dd HH:mm:ss");
-            for(i = 0;i<arrayList.size();i++){
-                if(arrayList.get(i).getMessage().toLowerCase().contains(lexeme.toLowerCase())){
-                    flag = true;
+            for (Message item : messageHistory) {
+                if (item.getMessage().toLowerCase().contains(lexeme.toLowerCase())) {
                     StringBuilder stringbuilder = new StringBuilder();
+                    flag = true;
                     stringbuilder.append("Author: ");
-                    stringbuilder.append(arrayList.get(i).getAuthor());
+                    stringbuilder.append(item.getAuthor());
                     stringbuilder.append("\nTimestamp: ");
-                    stringbuilder.append(formatting.format(arrayList.get(i).getTimestamp()));
+                    stringbuilder.append(formatting.format(item.getTimestamp()));
                     stringbuilder.append("\nId: ");
-                    stringbuilder.append(arrayList.get(i).getId());
+                    stringbuilder.append(item.getId());
                     stringbuilder.append("\nMessage:\n");
-                    stringbuilder.append(arrayList.get(i).getMessage());
+                    stringbuilder.append(item.getMessage());
                     stringbuilder.append("\n");
                     System.out.println(stringbuilder);
-                    stringbuilder.delete(0,stringbuilder.length());
+                    stringbuilder.delete(0, stringbuilder.length());
                 }
             }
-            if(!flag){
-                logger.info("Message not found!");
-                System.out.println("Messages not found!");
+            if (!flag) {
+                logger.info(Comments.MESSAGE_NOT_FOUND);
+            } else {
+                logger.info(Comments.SEARCH_BY_LEXEME);
             }
-        }else{
-            logger.info("Error, history is empty");
-            System.out.println("History is empty");
+        } else {
+            logger.info(Comments.HISTORY_IS_EMPTY);
         }
-        logger.info("Search by lexeme succsessful");
     }
-    public void searchRegex(){
+
+    public void searchRegex() {
         System.out.println("Enter regex:");
         Scanner scan = new Scanner(System.in);
-        String regex = new String();
-        if(scan.hasNextLine()) {
+        String regex = "";
+        if (scan.hasNextLine()) {
             regex = scan.nextLine();
         } else {
-            logger.info("Empty input!");
-            System.out.println("Empty input!");
+            logger.info(Comments.WRONG_INPUT);
         }
         Pattern p = Pattern.compile(regex);
         Matcher m;
         SimpleDateFormat formatting = new SimpleDateFormat("YYYY:MM:dd HH:mm:ss");
         boolean flag = false;
-        for(Message i: arrayList) {
+        for (Message i : messageHistory) {
             m = p.matcher(i.getMessage());
-            if(m.matches()) {
+            if (m.matches()) {
                 StringBuilder stringbuilder = new StringBuilder();
                 stringbuilder.append("Author: ");
                 stringbuilder.append(i.getAuthor());
@@ -252,27 +233,29 @@ public class MessageExchange {
                 System.out.println(stringbuilder);
                 stringbuilder.delete(0, stringbuilder.length());
                 flag = true;
-                logger.info("Search messages by regex: " + regex+" succsessful");
+                logger.info(Comments.SEARCH_BY_REGEX + regex + Comments.OK);
             }
         }
-        if(!flag){
-            logger.info("Search messages by regex: " + regex+" failed");
+        if (!flag) {
+            logger.info(Comments.SEARCH_BY_REGEX + regex + Comments.FAIL);
         }
     }
-    public void messageHistoryPeriod(){
+
+    public void messageHistoryPeriod() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter begin of period:");
-        String begin = new String();
-        String end = new String();
-        if(scan.hasNextLine()) {
+        String begin = "";
+        String end = "";
+        if (scan.hasNextLine()) {
             begin = scan.nextLine();
-        }else{
-            logger.info("Empty input!");
-            System.out.println("Empty input!");
+        } else {
+            logger.info(Comments.WRONG_INPUT);
         }
         System.out.println("Enter end of period:");
-        if(scan.hasNextLine()){
+        if (scan.hasNextLine()) {
             end = scan.nextLine();
+        } else {
+            logger.info(Comments.WRONG_INPUT);
         }
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         Date beginDate = new Date();
@@ -283,13 +266,13 @@ public class MessageExchange {
             endDate = formatter.parse(end);
 
         } catch (ParseException e) {
-            logger.info("Parsing failed, uncorrected date");
+            logger.info(Comments.PARSING_FAILD);
         }
         SimpleDateFormat formatting = new SimpleDateFormat("YYYY:MM:dd HH:mm:ss");
         boolean flag = false;
-        for(Message i: arrayList){
+        for (Message i : messageHistory) {
             messageDate = new Date(i.getTimestamp());
-            if(messageDate.after(beginDate) && messageDate.before(endDate)){
+            if (messageDate.after(beginDate) && messageDate.before(endDate)) {
                 StringBuilder stringbuilder = new StringBuilder();
                 stringbuilder.append("Author: ");
                 stringbuilder.append(i.getAuthor());
@@ -303,11 +286,12 @@ public class MessageExchange {
                 System.out.println(stringbuilder);
                 stringbuilder.delete(0, stringbuilder.length());
                 flag = true;
-                logger.info("Get message history by period succsessful");
             }
         }
-        if(!flag){
-            logger.info("Get message history by period failed");
+        if (!flag) {
+            logger.info(Comments.HISTORY_PERIOD + Comments.FAIL);
+        } else {
+            logger.info(Comments.HISTORY_PERIOD);
         }
     }
 }
