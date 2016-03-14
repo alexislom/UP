@@ -2,48 +2,217 @@ body {
   background: url("../background.jpg");
   background-color: #FFF;
   background-size: cover;
-  /*background-repeat: no-repeat;*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  margin: 0;
+}
+textarea{
+	resize:none;
+	overflow:hidden;
+}
+li {
+  list-style-type: none;
+}
+
+
+
+.main {
+  width: 100%;
+  max-width: 1920px;
+  min-width: 300px;
+  padding-top: 3%;
+  padding-bottom: 3%;
 }
 .All {
-	text-align: center;
-	width: 510px;
-	height: 470px;
-	margin: auto;
-	padding: 10px;
-	border: 3px solid #d3d3d3;
-	background-color: #F5F5F5;
-	border-radius: 5px;
+  width: 40%;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #000;
+  background-color: rgba(245, 245, 245, 0.4);
+  border-radius: 4px;
+  box-shadow:
+  0px 0px 1px rgba(255,255,255,0.8) inset,
+  5px 5px 5px rgba(0,0,0,0.4);
 }
-.top{
-	height: 50px;
+.chatBox {
+	width: 90%;
+	height: 340px;
+	background-color: rgba(255, 255, 255, 0.3);
+	border-radius: 4px;
+	margin: auto;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  	width: 5px;
+  	height: 5px;
+}
+
+::-webkit-scrollbar-track-piece{
+  	background-color: #ffffff;
+  	-webkit-border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical{
+  	height: 5px;
+  	background-color: #2e4a75;
+  	-webkit-border-radius: 5px;
+}
+.head{
+  text-align: center;
+  margin: auto;
+  width: 70%;
+}
+.errorserver {
 	text-align: center;
+	margin-top: 20px;
 	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
 	font-size: 20px;
-	color: #000000;
+	color: #000033;
 }
-.currentName{
+
+
+#NameOfUser{
+   color: #ededed;
+   font-size: 30px; 
+   font-family: sans-serif; 
+   position: absolute;
+   top: 3%;
+   left: 3%;
+   font-weight: bold; 
+}
+
+.time {
+  padding-right: 3%;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  font-size: 15px;
+  color: #4682B4;
+  font-weight: 900;
+  float: right;  
+  clear: both;
+  margin-bottom: -100%;
+}
+.item {
+  text-align: left;
+  padding: 7px;
+  border: 0;
+  border-radius: 10px;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  font-size: 15px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  width: 30%;
+  background-color: rgba(99,131,168, 0.7);
+  color: #FFF;
+  word-wrap: break-word;
+  float: left;
+  clear: both;
+  box-shadow:
+  5px 5px 5px rgba(0,0,0,0.4);
+}
+.redBut {
+  width: 20px;
+  height: 20px;
+  background: url("https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/edit.png") no-repeat center;
+  background-size: 70%;
+  border-radius: 10px ;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  float: right;
+  padding: 8px;
+  margin: 1px;
+}
+
+.redBut:hover {
+  box-shadow:
+ 1px 1px 1px rgba(255,255,255,0.4) inset,
+ 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.redBut:active {
+ box-shadow:
+ 0px 0px 1px rgba(0,0,0,0.5) inset,
+ 3px 3px 5px rgba(0,0,0,0.5);
+}
+.delBut {
+  width: 20px;
+  height: 20px;
+  background: url("https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/delete.png") no-repeat center;
+  background-size: 100%;
+  border-radius: 10px ;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  float: right;
+  padding: 8px;
+  margin: 1px;
+}
+
+.delBut:hover {
+ 	box-shadow:
+ 		1px 1px 1px rgba(255,255,255,0.4) inset,
+ 		1px 1px 1px rgba(0,0,0,0.4);
+}
+
+.delBut:active {
+ 	box-shadow:
+ 		0px 0px 1px rgba(0,0,0,0.5) inset,
+ 		3px 3px 5px rgba(0,0,0,0.5);
+}
+.myName { 
+  width: 50%;
+  padding-left: 1%;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  font-size: 15px;
+  color: #4682B4;
+  font-weight: 900;
+  float: left;  
+  clear: both;
+}
+.In {
+  width: 70%;
+  padding: 2px 2px 2px;
+  outline: none;
+  color: #555555;  
+  border: 1px solid #d3d3d3;
+  border-radius: 2px;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+}
+.items {
+  width: 100%;
+  padding-left: 0;
+  margin-top: 0;
+  
+}
+/*.currentName{
 	text-align: left;
 	position: absolute;
 	color: #000033;
 	font-size: 30px;
 	top: 5%;
 	left: 5%;
-}
+}*/
 .inputName {
 	text-align: center;
-	margin: 30px 0px 10px 0px;
+	margin: 5px 0px 10px 0px;
 }
 .inputMessage {
 	text-align: center;
-	margin-top: 0px;
+	margin-top: 10px;
+	opacity: 1;
 }
 .inputButtons{
 	text-align: center;
 	margin-top: 5px;
 }
 .todo-input-name {	
+	-webkit-transition: height 0.2s;
+	-moz-transition: height 0.2s;
+	transition: height 0.2s;
 	height: 20px;
-	width: 250px;
+	width: 25%;
     padding: 4px 6px;
     font-size: 11px;
     display: inline-block;
@@ -54,9 +223,15 @@ body {
     border-radius: 2px;
     font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
 }
+
 .todo-input-message {	
-	height: 20px;
-	width: 370px;
+	-webkit-transition: height 0.2s;
+	-moz-transition: height 0.2s;
+	transition: height 0.2s;
+	/*height: 35px;*/
+	/*width: 370px;*/
+	width: 70%;
+  min-height: 40px;
     padding: 4px 6px;
     font-size: 11px;
     display: inline-block;
@@ -67,7 +242,8 @@ body {
     border-radius: 2px;
     font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
 }
-.todo-button{
+.todo-button-name{
+	vertical-align: top;
 	height: 30px;
  	padding: 6px 16px 7px 16px;
   	font-size: 11px;
@@ -81,33 +257,145 @@ body {
   	border: 0;
   	border-radius: 2px;
 }
-.todo-button:hover{
+.todo-button{
+	vertical-align: top;
+	height: 30px;
+ 	padding: 6px 16px 7px 16px;
+  	font-size: 11px;
+  	display: inline-block;
+  	cursor: pointer;
+  	outline: none;
+  	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  	line-height: 13px;
+  	background-color: #6383a8;
+  	color: #FFF;
+  	border: 0;
+  	border-radius: 2px;
+}
+/*.todo-button:hover{
 	box-shadow:
+ 	0px 1px 1px rgba(255,255,255,0.8) inset,
+ 	1px 1px 1px rgba(0,0,0,0.4);
+}*/
+
+
+
+
+
+#btnSend {
+  padding: 6px 16px 7px 16px;
+  font-size: 11px;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  line-height: 13px;
+  background-color: #6383a8;
+  color: #FFF;
+  border: 0;
+  border-radius: 2px;
+}
+#btnSend:hover{
+  box-shadow:
  0px 1px 1px rgba(255,255,255,0.8) inset,
  1px 1px 1px rgba(0,0,0,0.4);
 }
-.chatBox {
-	text-align: center;
-	width: 450px;
-	height: 340px;
-	margin: 30px 0px 25px 25px;
-	border: 2px solid #d3d3d3;
-	background-color: #FFF;
+
+#btnSend:active {
+  box-shadow:
+ 0px 0px 1px rgba(0,0,0,0.8) inset,
+ 3px 3px 3px rgba(0,0,0,0.8);
 }
-.errorserver {
-	text-align: center;
-	margin-top: 20px;
-	font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
-	font-size: 20px;
-	color: #000033;
+
+#btnChange {
+  padding: 6px 16px 7px 16px;
+  font-size: 11px;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+  line-height: 13px;
+  background-color: #6383a8;
+  color: #FFF;
+  border: 0;
+  border-radius: 2px;
 }
-.copyright {
+
+#btnChange:hover{
+  box-shadow:
+ 0px 1px 1px rgba(255,255,255,0.8) inset,
+ 1px 1px 1px rgba(0,0,0,0.4);
+}
+
+#btnChange:active {
+  box-shadow:
+ 0px 0px 1px rgba(0,0,0,0.8) inset,
+ 3px 3px 3px rgba(0,0,0,0.8);
+}
+
+
+
+footer{
+	position: relative;
+	margin: 10px auto 0;
+	height: 15px;
+	font-size: 15px;
+	right: 3px;
+	text-align: right;
+}
+/*.copyright {
 	position: relative;
 	bottom: 1px;
 	right: 1px;
 	margin: auto;
 	text-align: right;
 	font-size: 15px;
+}*/
+/*
+.todo-input { 
+  height: 16px;
+  width: 50%;
+  padding: 4px 6px;
+  font-size: 11px;
+  display: inline-block;
+  line-height: 20px;
+  outline: none;
+  color: #555555;  
+  border: 1px solid #d3d3d3;
+  border-radius: 2px;
+  font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+}*/
+
+
+
+/*
+.noscroll {
+    overflow: hidden;
 }
+.hiddendiv {
+    display: none;
+    white-space: pre-wrap;
+    width: 500px;
+    min-height: 50px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    padding: 5px;
+    word-wrap: break-word;
+}
+
+*/
+
+
+/*
+.chatBox {
+	 width: 90%;
+	 height: 290px;
+	 margin: auto;
+	 background-color: rgba(255, 255, 255, 0.3);
+	 border-radius: 4px;
+	 overflow-y: scroll;
+	 overflow-x: hidden;
+}*/
+
 
 
