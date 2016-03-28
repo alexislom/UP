@@ -1,3 +1,7 @@
+var username ='';
+var listOfAllMessages = [];
+var id = 0;
+flag = new Boolean(true);
 function run(){
 
 	var appContainer = document.getElementsByClassName('main')[0];
@@ -5,25 +9,31 @@ function run(){
 	appContainer.addEventListener('click', delegateMessage);
 	appContainer.addEventListener('keydown', delegateMessage);
 
-	var username = restoreUserName() || "Default User";
+	listOfAllMessages= restoreUserMessage() || [theMessage('Chat launched')];
+	id = listOfAllMessages[listOfAllMessages.length - 1].identificator;
+
+	username = restoreUserName() || "Default User";
 	document.getElementById('NameOfUser').innerText = username;
 
-	/*var allMessages = restore() || [ theMessage('Message 1'),
-			theMessage('Message 2'),
-			theMessage('Message 3')
-		];
-	createList(allMessages);*/
+	//localStorage.clear();
+
+	UpdateHistoryOfMessage(listOfAllMessages);
+
+	var chatArea = document.getElementById('chatArea');
+    chatArea.scrollTop += 9999;
 }
-/////////////////////
+/////////////////////event processing
 function delegateMessage(evtObj) {
-	if((evtObj.type === 'click' && evtObj.target.classList.contains('todo-button-name')) || evtObj.keyCode == 13) {
+	if((evtObj.type === 'click' && evtObj.target.classList.contains('todo-button-name')) || 
+		(evtObj.type === 'keydown' && evtObj.target.classList.contains('todo-input-name') && evtObj.keyCode == 13)) {
 		setNewName(evtObj);
 	}
-	if(evtObj.type === 'click' && evtObj.target.classList.contains('todo-button'))  {
-		//sendMessage(evtObj);
+	if((evtObj.type === 'click' && evtObj.target.classList.contains('todo-button')) ||
+	 (evtObj.type === 'keydown' && evtObj.target.classList.contains('todo-input-message') && evtObj.keyCode == 13)){
+		sendNewMessage(evtObj);
 	}
 }
-////////////////////
+////////////////////name processing
 function restoreUserName() {
 	if(typeof(Storage) == "undefined") {
 		alert('localStorage is not accessible');
@@ -35,7 +45,6 @@ function restoreUserName() {
 function setNewName(evtObj){
 	var name = document.getElementById('todoName');
 	changeName(name.value);
-	storeUserName();
 	name.value = '';
 }
 function changeName(value){
@@ -43,6 +52,9 @@ function changeName(value){
 		return;
 	}
 	document.getElementById('NameOfUser').innerText = value;
+	username = value;
+	storeUserName();
+	UpdateHistoryOfMessage(listOfAllMessages);//!!!!!!!!
 }
 function storeUserName() {
 	if(typeof(Storage) == "undefined") {
@@ -52,159 +64,194 @@ function storeUserName() {
 	var currentUser = document.getElementById('NameOfUser').innerText;
 	localStorage.setItem("username", currentUser);
 }
-////////////////////
+////////////////////some scripts processing
 function clearContents(element) {
   element.value = '';
   //element.value = document.getElementById('todoText').value;
 }
-////////////////////
-var messageList = [];
-
-/*function restore() {
+////////////////////message processing
+function restoreUserMessage() {
 	if(typeof(Storage) == "undefined") {
 		alert('localStorage is not accessible');
 		return;
 	}
 	var item = localStorage.getItem("localMessageList");
 	return item && JSON.parse(item);
-}*/
-/*var theMessage = function(text) {
-	var date = new Date();//.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*//*, "$1");*/
-	/*var user = localStorage.getItem("username");
-	return {
+}
+function theMessage(text) {
+    id++;
 
-		time:  date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*//*, "$1");*/ //date.getHours() + ":" + date.getMinutes(),
-/*		sender: user,
-		description: text,
-		id: uniqueId()
-	};*/
-/*}*/
-/*var uniqueId = function() {
+    return {
+        nickname: username,
+        identificator: uniqueId(), //id,
+        messtext: text,
+        timer: new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"),
+        deleted: false
+    };
+}
+var uniqueId = function() {
 	var date = Date.now();
 	var random = Math.random() * Math.random();
 	return Math.floor(date * random).toString();
-};
-function createList(allMessages) {
-	for(var i = 0; i < allMessages.length; i++)
-		addMessage(allMessages[i]);
 }
-function addMessage(newMes) {
-	var item = createMessage(newMes);
-	var items = document.getElementsByClassName('chatBox')[0];
-	messageList.push(newMes);
-	items.appendChild(item);
+function sendNewMessage() {
+    var todoText = document.getElementById('todoText');
+    var text = todoText.value;
+
+    if(text != "") {
+    	listOfAllMessages.push(theMessage(text));
+    	UpdateHistoryOfMessage(listOfAllMessages);
+    	todoText.value = "";//!!!!!!!!!!!!!!!
+    }
+
+    flag = true; 
+
+    var chatArea = document.getElementById('chatArea');
+    chatArea.scrollTop += 9999;  
 }
-function createMessage(newMes){
-	var divItem = document.createElement('div');
-	divItem.setAttribute('id', newMes.id);
-	var pr = document.createElement('span');
-	var mess = document.createElement('span');
-	var time = document.createTextNode (newMes.time + '  ');
-	pr.appendChild (time);
-	var sender = document.createTextNode(newMes.sender+ ':  ');
-	pr.appendChild(sender);
-	var textMessage = document.createTextNode(newMes.description);
-	mess.appendChild(textMessage);
-	divItem.appendChild(pr);
-	divItem.appendChild(mess);
-	return divItem;
+function UpdateHistoryOfMessage(listOfAllMessages) {
+	document.getElementById('list').innerHTML = "";
+
+	for(var i = 0; i < listOfAllMessages.length; i++){
+		showUpdateHistoryOfMessage(listOfAllMessages[i]);
+	}
+	storeUserHistory(listOfAllMessages);
 }
-*/
 
+function storeUserHistory(listToSave) {
+	if(typeof(Storage) == "undefined") {
+		alert('localStorage is not accessible');
+		return;
+	}
+	localStorage.setItem("localMessageList", JSON.stringify(listToSave));
+}
 
-var id = 0;
-
-function sendMessage() {
-	var todoText = document.getElementById('todoText');
-	//var todoText = username;
+function showUpdateHistoryOfMessage(message) { 		
 	var divItem = document.createElement('li');
 	var divName = document.createElement('li');
 	var textName = document.createElement('div');
-	var text = document.createElement('div');
+	var textItem = document.createElement('div');
 	var time = document.createElement('div');
-	var but1 = document.createElement('button');
-	var but2 = document.createElement('button');
-	//var input = document.createElement('input');
-	var textarea = document.createElement('textarea');
-   		
-	but1.classList.add('delBut');
-	but2.classList.add('redBut');
+	var chatArea = document.getElementById('chatArea');
+
 	time.classList.add('time');
 	divItem.classList.add('item');
+	textItem.classList.add('Txt');
 	textName.classList.add('myName');
 
-	time.setAttribute('id', 't');
-	divItem.setAttribute('id', 'divId' + id);
-	text.setAttribute('id', 'textDiv' + id);
-	//input.setAttribute('id', 'textIn' + id);
-	textarea.setAttribute('class', 'In');
+	time.setAttribute('id', 't' + message.identificator);
+	divItem.setAttribute('id', 'divId' + message.identificator);
+	textItem.setAttribute('id', 'textDiv' + message.identificator);
 
-	var s = new String(id);
-	text.innerHTML = todoText.value;
-	textName.innerHTML = username;
-	time.textContent = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+	if(username === message.nickname) {
 
-	/*but1.addEventListener('click', function(){
-		deleteMessage(s);
-	});
+		if(!message.deleted) {
+			var deleteBtn = document.createElement('button');
+			var editBtn = document.createElement('button');
+		
+			deleteBtn.classList.add('delBut');
+			editBtn.classList.add('redBut');
+		
+			deleteBtn.setAttribute('id','del' + message.identificator);
+			deleteBtn.setAttribute('title','Delete message');
+    		editBtn.setAttribute('id','red' + message.identificator);
+    		editBtn.setAttribute('title','Click to open \nDouble-click to close');
+    	
+			deleteBtn.addEventListener('click', function(){
+				deleteMessage(message);
+			});
 
-	but2.addEventListener('click', function(){
-		changeMessage(s);
-	});*/
+			editBtn.addEventListener('click', function(){
+				if(flag == true) {
+					changeMessage(message);
+				} 
+			});
 
-	divItem.appendChild(but1);
-	divItem.appendChild(but2);
-	divItem.appendChild(text);
-	divItem.appendChild(textarea);
+			editBtn.addEventListener('dblclick', function(){
+				closeEdit(message);
+			});
+
+			chatArea.addEventListener('keydown', function(e){
+				if(e.keyCode == 27){
+					exitFromEdit(message);
+				}
+			});
+
+			divItem.appendChild(editBtn);
+			divItem.appendChild(deleteBtn);
+		}
+
+		var inputForEdit = document.createElement('input');
+
+		inputForEdit.classList.add('In');
+		inputForEdit.setAttribute('id', 'textIn' + message.identificator);
+		inputForEdit.hidden = true;
+
+		divItem.appendChild(inputForEdit);
+	}
+	
+	textItem.innerHTML = message.messtext;
+	textName.innerHTML = message.nickname;
+	time.innerHTML = message.timer;
+
 	divName.appendChild(time);
 	divName.appendChild(textName);
+
+	divItem.appendChild(textItem);
+
+	document.getElementById('list').appendChild(divName);
+	document.getElementById('list').appendChild(divItem);
+}
+
+function deleteMessage(message) {
+	message.messtext = 'Deleted...';
+	message.deleted = true;
+	flag = true;
+	UpdateHistoryOfMessage(listOfAllMessages);
+}
+
+function changeMessage(message) {
+	var textItem = document.getElementById('textDiv' + message.identificator);
+	var inputForEdit = document.getElementById('textIn' + message.identificator);
+
+	textItem.hidden = true;
+	inputForEdit.hidden = false;
 	
-	textarea.hidden = true;
-	text.hidden = false;
+	inputForEdit.value = message.messtext;
 
-	if(todoText.value != "") {
-		document.getElementById('list').appendChild(divName);
-		document.getElementById('list').appendChild(divItem);
-	}
+	flag = false; 
 
-	/*if(username == "Sasha") {
-		but1.hidden = false;
-		but2.hidden = false;
-	} else {
-		but1.hidden = true;
-		but2.hidden = true;
-	}*/
-
-	todoText.value = "";
-	//id++;
-}
-
-
-/*function deleteMessage(id) {
-	var k = document.getElementById('divId' + id);
-
-	document.getElementById('divId' + id).innerHTML = 'Сообщение удалено...';
-	k.classList.remove('item');
-	k.classList.add('myDeletedMessage');
-}
-
-function changeMessage(id) {
-	var k = document.getElementById('divId' + id);
-	var text = document.getElementById('textDiv' + id);
-	var input = document.getElementById('textIn' + id);
-	input.value = text.innerHTML;
-	input.hidden = false;
-	text.hidden = true;
-
-	input.addEventListener('keydown', function(e) {
-		if(e.keyCode == 13) {
-			text.innerHTML = input.value;
-			input.hidden = true;
-			text.hidden = false;
+	inputForEdit.addEventListener('keydown', function(e) {
+		if(e.keyCode == 13 && username === message.nickname) {
+			message.messtext = inputForEdit.value;
+			inputForEdit.hidden = true;
+			textItem.hidden = false;
+			UpdateHistoryOfMessage(listOfAllMessages);
+			flag = true;
 		}
-	});		
+	});
 }
-*/
+
+function closeEdit(message) {
+	var textItem = document.getElementById('textDiv' + message.identificator);
+	var inputForEdit = document.getElementById('textIn' + message.identificator);
+	inputForEdit.hidden = true;
+	textItem.hidden = false;
+	flag = true; 
+}
+
+function exitFromEdit(message) {
+	var textItem = document.getElementById('textDiv' + message.identificator);
+	var inputForEdit = document.getElementById('textIn' + message.identificator);
+	inputForEdit.hidden = true;
+	textItem.hidden = false;
+	flag = true; 
+}
+
+
+
+
+
 
 
 

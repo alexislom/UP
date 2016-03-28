@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title> Chatik </title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="assets/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <script src="assets/scripts/scripts.js"></script>
+</head>
+<body onload="run()"> 
+
+  <div class="main">
+
+    <header class="head">
+      <div id="NameOfUser"></div>
+      <div class="errorserver"></div>
+
+    	<div class = "inputName">
+            <input id = "todoName" type = "text" class ="todo-input-name" placeholder = "New name">
+            <button id = "btnChange" type = "button" class ="todo-button-name">Change name</button>     
+      </div>
+    </header>
+  	<div class="All"> 
+
+  		<div class="chatBox" id="chatArea">
+  		  <ul class="items" id="list">
+            
+        </ul>
+  		</div>
+
+      <form class = "inputMessage">
+              <textarea id = "todoText" class = "todo-input-message" placeholder ="Input message..." maxlength="140"
+                onfocus="clearContents(this);">        
+              </textarea><!--  onfocus="moveCaretToStart(this);"setFocus(); onfocus="clearContents(this);"    autofocus onkeyup="$('.todo-input-message').autosize();">-->
+              <button id = "btnSend" type = "button" class = "todo-button">Send</button>
+      </form>
+  	</div>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <p>Alex Lomako 2 course 5 group. Copyright © 2016. All rights reserved</p>
+    </div>
+  </footer>
+</body>
+</html>
+
+
+<!-- <div class = "inputMessage"> -->
+              <!--<input id = "todoText" type = "text" class = "todo-input-message" placeholder ="Input message...">-->
+              <!-- <textarea id = "todoText" class = "todo-input-message" placeholder ="Input message..." maxlength="140"
+                onfocus="clearContents(this);"> -->
+                
+              <!-- </textarea> --><!--  onfocus="moveCaretToStart(this);"setFocus(); onfocus="clearContents(this);"    autofocus onkeyup="$('.todo-input-message').autosize();">-->
+     <!--          <button id = "btnSend" type = "button" class = "todo-button">Send</button>
+      </div> -->
