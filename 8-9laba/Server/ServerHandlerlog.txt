@@ -1,0 +1,4 @@
+﻿2016-05-29 14:29:27.686: [by.bsu.up.chat.server.ServerHandler] Received new message from user: Message{text='Hi', timestamp=1464521367681, author='LOM', id='33342776105'}
+2016-05-29 14:29:35.547: [by.bsu.up.chat.server.ServerHandler] Received new message from user: Message{text='privetik', timestamp=1464521375544, author='Not LOM', id='55140074571'}
+2016-05-29 14:29:49.274: [by.bsu.up.chat.server.ServerHandler] Received new message from user: Message{text='How are you?', timestamp=1464521389270, author='LOM', id='232254135035'}
+2016-05-29 14:30:15.417: [by.bsu.up.chat.server.ServerHandler] Received new message from user: Message{text='I'm fine thanks', timestamp=1464521415415, author='Not LOM', id='246692477547'}

@@ -1,0 +1,8 @@
+2016-05-29 14:28:42.429: [by.bsu.up.chat.Launcher] Starting server on localhost...
+2016-05-29 14:28:42.536: [by.bsu.up.chat.Launcher] Server started.
+2016-05-29 14:28:42.548: [by.bsu.up.chat.Launcher] Get list of messages: GET http://192.168.100.4:8080/chat?token={token}
+2016-05-29 14:28:42.551: [by.bsu.up.chat.Launcher] Send message: POST http://192.168.100.4:8080/chat provide body json in format {"id" : "1", "author":"User1", "text":"Hello, all!", "timestamp":1459169330000}
+2016-05-29 14:31:13.725: [by.bsu.up.chat.Launcher] Starting server on localhost...
+2016-05-29 14:31:13.84: [by.bsu.up.chat.Launcher] Server started.
+2016-05-29 14:31:13.855: [by.bsu.up.chat.Launcher] Get list of messages: GET http://192.168.100.4:8080/chat?token={token}
+2016-05-29 14:31:13.858: [by.bsu.up.chat.Launcher] Send message: POST http://192.168.100.4:8080/chat provide body json in format {"id" : "1", "author":"User1", "text":"Hello, all!", "timestamp":1459169330000}
